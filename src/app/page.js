@@ -6,26 +6,18 @@ import StartMenu from "@/components/StartMenu";
 
 export default function Home() {
   const [gameStarted, setGameStarted] = useState(false);
-  const gridRef = useRef(null);
 
   const handleStartGame = () => {
     setGameStarted(true); 
   };
 
-  useEffect(() => {
-    if (gameStarted && gridRef.current) {
-      gridRef.current.focus(); // Focus the grid element
-    }
-  }, [gameStarted]);
-
-
   return (
     <main className="flex flex-col min-h-screen p-4 justify-center items-center">
       {gameStarted ? (
-        <SnakeGrid gridRef={gridRef} /> 
+        <SnakeGrid /> 
       ) : (
         <StartMenu onStartGame={handleStartGame} />
       )}
     </main>
     );
-  }
+  } 

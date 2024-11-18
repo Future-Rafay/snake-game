@@ -34,6 +34,8 @@ const SnakeGrid = ({ gridRef }) => {
     const [foodImage, setFoodImage] = useState(getRandomFoodImage());
     const [direction, setDirection] = useState("RIGHT")
     const [gameOver, setGameOver] = useState(false)
+    const [score, setScore] = useState(0);
+    const [highestScore, setHighestScore] = useState(0);
     const intervalRef = useRef(null); // Store the interval ID
     const gameGridRef = useRef(null); // Reference for the grid div
 
@@ -53,6 +55,7 @@ const SnakeGrid = ({ gridRef }) => {
         ]);
         setDirection("RIGHT");
         setGameOver(false);
+        setScore(0);
         generateFood();
         focusGameGrid(); // Ensure the grid gets focused
     };
@@ -64,6 +67,10 @@ const SnakeGrid = ({ gridRef }) => {
     };
 
     useEffect(() => {
+        const storedHighestScore = localStorage.getItem("highestScore");
+        if (storedHighestScore) {
+            setHighestScore(parseInt(storedHighestScore, 10));
+        }
         generateFood();
         focusGameGrid();
     }, [])
@@ -100,12 +107,18 @@ const SnakeGrid = ({ gridRef }) => {
         ) {
             setGameOver(true);
             clearInterval(intervalRef.current);
+
+            if (score > highestScore) {
+                setHighestScore(score);
+                localStorage.setItem("highestScore", score);
+            }
             return;
         }
 
         newSnake.unshift(snakeHead);
 
         if (snakeHead.x === food.x && snakeHead.y === food.y) {
+            setScore(score + 10); 
             generateFood();
         } else {
             newSnake.pop();
@@ -170,6 +183,12 @@ const SnakeGrid = ({ gridRef }) => {
                     </button>
                 </div>
             )}
+
+             <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
+                <p className="text-xl font-bold">Score: {score}</p>
+                <p className="text-xl font-bold">Highest Score: {highestScore}</p>
+            </div>
+
             {Array.from({ length: grid_Size }).map((_, y) => (
                 <div key={y} className="flex">
                     {Array.from({ length: grid_Size }).map((_, x) => {
@@ -205,4 +224,4 @@ const SnakeGrid = ({ gridRef }) => {
     );
 }
 
-export default SnakeGrid;       
+export default SnakeGrid;
