@@ -36,6 +36,7 @@ const SnakeGrid = ({ gridRef }) => {
     const [gameOver, setGameOver] = useState(false)
     const [score, setScore] = useState(0);
     const [highestScore, setHighestScore] = useState(0);
+    const [paused, setPaused] = useState(false); // Paused state
     const intervalRef = useRef(null); // Store the interval ID
     const gameGridRef = useRef(null); // Reference for the grid div
 
@@ -58,6 +59,7 @@ const SnakeGrid = ({ gridRef }) => {
         setScore(0);
         generateFood();
         focusGameGrid(); // Ensure the grid gets focused
+        setPaused(false); 
     };
 
     const focusGameGrid = () => {
@@ -77,10 +79,9 @@ const SnakeGrid = ({ gridRef }) => {
 
     const moveSnake = () => {
 
-        if (gameOver) {
-            return;
+        if (gameOver || paused) {
+            return; // Don't move if the game is over or paused
         }
-
         const newSnake = [...snake];
         const snakeHead = { ...newSnake[0] };
 
@@ -127,12 +128,18 @@ const SnakeGrid = ({ gridRef }) => {
         setSnake(newSnake)
     }
 
-    useEffect(() => {
-        if (!gameOver) {
+    // useEffect(() => {
+    //     if (!gameOver) {
+    //         intervalRef.current = setInterval(moveSnake, snake_speed);
+    //     }
+    //     return () => clearInterval(intervalRef.current); // Clear the interval when the component unmounts or game ends
+    // }, [snake, direction, gameOver]);
+    useEffect(() => {       
+        if (!gameOver && !paused) {
             intervalRef.current = setInterval(moveSnake, snake_speed);
         }
         return () => clearInterval(intervalRef.current); // Clear the interval when the component unmounts or game ends
-    }, [snake, direction, gameOver]);
+    }, [snake, direction, gameOver, paused]);
 
     const handleKeyPress = (event) => {
 
@@ -149,6 +156,7 @@ const SnakeGrid = ({ gridRef }) => {
             setDirection("RIGHT");
         }
     }
+
     const getSnakeHeadRotation = () => {
         switch (direction) {
             case "UP":
@@ -162,6 +170,9 @@ const SnakeGrid = ({ gridRef }) => {
             default:
                 return "rotate(0deg)";
         }
+    };
+    const togglePause = () => {
+        setPaused(prev => !prev); // Toggle pause state
     };
 
     return (
@@ -188,6 +199,12 @@ const SnakeGrid = ({ gridRef }) => {
                 <p className="text-xl font-bold">Score: {score}</p>
                 <p className="text-xl font-bold">Highest Score: {highestScore}</p>
             </div>
+            <button
+                className="absolute top-4 right-4 px-6 py-2 bg-yellow-500 text-xl font-semibold rounded hover:bg-yellow-600"
+                onClick={togglePause}
+            >
+                {paused ? "Resume" : "Pause"}
+            </button>
 
             {Array.from({ length: grid_Size }).map((_, y) => (
                 <div key={y} className="flex">
