@@ -27,5 +27,5 @@ export default function Home() {
         <StartMenu onStartGame={handleStartGame} />
       )}
     </main>
-  );
-}
+    );
+  }
