@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 
 const grid_Size = 20
 
-const SnakeGrid = () => {
+
+const SnakeGrid = ({ gridRef }) => {
 
     const [snake, setSnake] = useState([
         // Snake Head //
@@ -46,9 +47,9 @@ const SnakeGrid = () => {
 
         if (
             snakeHead.x < 0 ||
-            snakeHead.x > grid_Size ||
+            snakeHead.x > grid_Size - 1 ||
             snakeHead.y < 0 ||
-            snakeHead.y > grid_Size ||
+            snakeHead.y > grid_Size - 1 ||
 
             newSnake.some((snakeBody) => snakeBody.x === snakeHead.x && snakeBody.y === snakeHead.y)
         ) {
@@ -92,9 +93,11 @@ const SnakeGrid = () => {
         <>
             <div className="border-2 border-solid border-black">
                 <div
+                    ref={gridRef}
                     onKeyDown={handleKeyPress}
                     tabIndex={0}
                     autoFocus
+
                     className="gird grid-cols-20 grid-rows-20">
                     {gameOver && (
                         <div className="absolute h-screen inset-0 flex items-center justify-center text-6xl font-bold">GAME OVER!</div>
@@ -102,11 +105,17 @@ const SnakeGrid = () => {
                     {Array.from({ length: grid_Size }).map((_, y) => (
                         <div key={y} className="flex">
                             {Array.from({ length: grid_Size }).map((_, x) => (
-                                <div key={x} className={`w-10 h-10 rounded-2xl
+
+                                <div
+                                    key={x}
+                                    className={`w-10 h-10 rounded-2xl
                                     ${snake.some((snakeBody) => snakeBody.x === x && snakeBody.y === y) && "bg-green-500"}
-                                    ${food.x === x && food.y === y && "bg-red-500"}
-                                    
-                                `}></div>
+                                `}
+                                    style={{
+                                        backgroundImage: food.x === x && food.y === y ? "url('/images/Apple.png')" : 'none',
+                                        backgroundSize: '40px 40px',
+                                    }}
+                                ></div>
                             )
 
                             )}
