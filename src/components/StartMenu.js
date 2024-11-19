@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const StartMenu = ({ onStartGame }) => {
+    const [difficulty, setDifficulty] = useState("easy");
+
+    const handleStartClick = () => {
+        onStartGame(difficulty);
+    };
+
     return (
         <div
             className="flex flex-col items-center justify-center h-screen w-full bg-cover bg-center"
@@ -10,12 +16,24 @@ const StartMenu = ({ onStartGame }) => {
             <p className="text-white text-xl mb-8">Use the arrow keys or WASD to move the snake</p>
             <button
                 className="px-6 py-3 text-xl text-white bg-green-500 rounded-lg shadow-md hover:bg-green-600 transition duration-300"
-                onClick={onStartGame}
+
+                onClick={handleStartClick}
             >
                 Start Game
             </button>
+            <select
+                value={difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+                className="mt-4 px-6 py-3 text-xl text-white bg-green-500 rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+            >
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
         </div>
     );
 };
 
 export default StartMenu;
+
+

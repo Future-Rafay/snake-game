@@ -9,7 +9,6 @@ const gameStartSound = new Audio('/sounds/gameStartSound.mp3')
 const gameOverSound = new Audio('/sounds/game-over3.mp3');
 const collisionSound = new Audio('/sounds/collisionSound.mp3')
 
-
 const foodImages = [
     '/images/Apple.png',
     '/images/burgur.png',
@@ -26,8 +25,7 @@ const getRandomFoodImage = () => {
     return foodImages[randomIndex];
 };
 
-
-const SnakeGrid = () => {
+const SnakeGrid = ({ speed }) => {
 
     const [snake, setSnake] = useState([
         { x: 3, y: 1 }, // Head
@@ -39,7 +37,7 @@ const SnakeGrid = () => {
     const [foodImage, setFoodImage] = useState(getRandomFoodImage());
     const [direction, setDirection] = useState("RIGHT")
     const [gameOver, setGameOver] = useState(false)
-    const [speed, setSpeed] = useState(200);
+    const [IncreaseSpeed, setIncreaseSpeed] = useState(speed);
     const [score, setScore] = useState(0);
     const [highestScore, setHighestScore] = useState(0);
     const [directionChangeAllowed, setDirectionChangeAllowed] = useState(true);
@@ -49,9 +47,9 @@ const SnakeGrid = () => {
 
 
     useEffect(() => {
-        if (score > 0 && score % 3 === 0) { // Adjust speed every 20 points
-            setSpeed((prevSpeed) => Math.max(prevSpeed - 20, 50));
-            
+        if (score > 0 && score % 4 === 0) { // Adjust speed every 10 points
+            setIncreaseSpeed((prevSpeed) => Math.max(prevSpeed - 10, 50));
+
         }
     }, [score]);
 
@@ -70,11 +68,11 @@ const SnakeGrid = () => {
             { x: 2, y: 1 },
             { x: 1, y: 1 },
         ]);
-        gameOverSound.ended;
+
         gameStartSound.play();
         setDirection("RIGHT");
         setGameOver(false);
-        setSpeed(200)
+        setIncreaseSpeed(speed)
         setScore(0);
         generateFood();
         focusGameGrid(); // Ensure the grid gets focused
@@ -161,10 +159,10 @@ const SnakeGrid = () => {
     useEffect(() => {
         if (!gameOver && !paused) {
 
-            intervalRef.current = setInterval(moveSnake, speed);
+            intervalRef.current = setInterval(moveSnake, IncreaseSpeed);
         }
         return () => clearInterval(intervalRef.current);
-    }, [speed, snake, direction, gameOver, paused]);
+    }, [ snake, direction, gameOver, paused]);
 
     const handleKeyPress = (event) => {
         if (paused || !directionChangeAllowed) {
@@ -206,10 +204,11 @@ const SnakeGrid = () => {
                 return "rotate(0deg)";
         }
     };
+
     const togglePause = () => {
         setPaused(prev => !prev); // Toggle pause state
     };
-
+    
     return (
         <div
             ref={gameGridRef}
@@ -254,16 +253,11 @@ const SnakeGrid = () => {
                                 className={`w-10 h-10 ${isSnakeBody && !isHead ? "bg-[#8cc43f]" : ""
                                     }`}
                                 style={{
-                                    backgroundImage: isHead
-                                        ? "url('/images/snakeHead.png')"
-                                        // : isSnakeBody
-                                        //     ? "url('/images/snakeBody.png')"
-                                        : food.x === x && food.y === y
-                                            ? `url('${foodImage}')`
-                                            : 'none',
+                                    backgroundImage: isHead ? "url('/images/snakeHead.png')" : isSnakeBody ? "url('/images/snakeBody.png')" : food.x === x && food.y === y ? `url('${foodImage}')` : 'none',
                                     backgroundSize: "40px 40px",
                                     backgroundPosition: "center",
                                     backgroundRepeat: "no-repeat",
+                                    borderRadius: isHead ? '30%' : isSnakeBody ? '40%' : 'none',
                                     transform: isHead ? getSnakeHeadRotation() : 'none'
 
                                 }}
