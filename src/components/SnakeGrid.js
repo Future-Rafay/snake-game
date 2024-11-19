@@ -5,6 +5,12 @@ import { useEffect, useRef, useState } from "react";
 const grid_Size = 20;
 const snake_speed = 100;
 
+const eatSound = new Audio('/sounds/eatingApple.mp3');
+const gameStartSound = new Audio('/sounds/gameStartSound.mp3')
+const gameOverSound = new Audio('/sounds/game-over3.mp3');
+const collisionSound = new Audio('/sounds/collisionSound.mp3')
+
+
 const foodImages = [
     '/images/Apple.png',
     '/images/burgur.png',
@@ -54,6 +60,8 @@ const SnakeGrid = ({ gridRef }) => {
             { x: 2, y: 1 },
             { x: 1, y: 1 },
         ]);
+        gameOverSound.ended;
+        gameStartSound.play();
         setDirection("RIGHT");
         setGameOver(false);
         setScore(0);
@@ -73,6 +81,7 @@ const SnakeGrid = ({ gridRef }) => {
         if (storedHighestScore) {
             setHighestScore(parseInt(storedHighestScore, 10));
         }
+        gameStartSound.play();
         generateFood();
         focusGameGrid();
     }, [])
@@ -107,6 +116,10 @@ const SnakeGrid = ({ gridRef }) => {
             newSnake.some((snakeBody) => snakeBody.x === snakeHead.x && snakeBody.y === snakeHead.y)
         ) {
             setGameOver(true);
+            collisionSound.play();
+            collisionSound.onended = () => {
+                gameOverSound.play();
+            };
             clearInterval(intervalRef.current);
 
             if (score > highestScore) {
@@ -119,7 +132,9 @@ const SnakeGrid = ({ gridRef }) => {
         newSnake.unshift(snakeHead);
 
         if (snakeHead.x === food.x && snakeHead.y === food.y) {
+
             setScore(score + 10); 
+            eatSound.play();
             generateFood();
         } else {
             newSnake.pop();
@@ -128,20 +143,18 @@ const SnakeGrid = ({ gridRef }) => {
         setSnake(newSnake)
     }
 
-    // useEffect(() => {
-    //     if (!gameOver) {
-    //         intervalRef.current = setInterval(moveSnake, snake_speed);
-    //     }
-    //     return () => clearInterval(intervalRef.current); // Clear the interval when the component unmounts or game ends
-    // }, [snake, direction, gameOver]);
     useEffect(() => {       
         if (!gameOver && !paused) {
+           
             intervalRef.current = setInterval(moveSnake, snake_speed);
         }
-        return () => clearInterval(intervalRef.current); // Clear the interval when the component unmounts or game ends
+        return () => clearInterval(intervalRef.current);
     }, [snake, direction, gameOver, paused]);
 
     const handleKeyPress = (event) => {
+        if (paused) {
+            return;
+        }
 
         if ((event.key === "ArrowUp" || event.key === "w") && direction !== "DOWN") {
             setDirection("UP");
