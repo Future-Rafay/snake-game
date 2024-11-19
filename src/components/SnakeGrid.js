@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 
 const grid_Size = 20;
@@ -8,7 +7,6 @@ const eatSound = new Audio('/sounds/eatingApple.mp3');
 const gameStartSound = new Audio('/sounds/gameStartSound.mp3')
 const gameOverSound = new Audio('/sounds/game-over3.mp3');
 const collisionSound = new Audio('/sounds/collisionSound.mp3')
-const victorySound = new Audio('/sounds/victory.mp3');
 
 const foodImages = [
     '/images/Apple.png',
@@ -48,23 +46,13 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
     const gameGridRef = useRef(null); // Reference for the grid div
 
     useEffect(() => {
-        if (gameOver) {
-            if (score > highestScore) {
-                // Victory Sound & Animation
-                victorySound.play();
-            }
-        }
-    }, [gameOver, score, highestScore]);
-
-    useEffect(() => {
-        if (score > 0 && score % 1 === 0) { // Adjust speed every 10 points
+        if (score > 0 && score % 5 === 0) { // Adjust speed every 10 points
             setIncreaseSpeed((prevSpeed) => Math.max(prevSpeed - 10, 50));
             setSpeedIncreased(true);
             setTimeout(() => setSpeedIncreased(false), 1500);
 
         }
     }, [score]);
-
 
     const generateFood = () => {
         const x = Math.floor(Math.random() * grid_Size);
@@ -247,7 +235,7 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
                             className="px-8 py-4 text-2xl font-semibold bg-green-500 rounded hover:bg-green-700"
                             onClick={resetGame}
                         >
-                            Play Again  
+                            Play Again
                         </button>
                         <button
                             className="mt-8 px-8 py-4 text-2xl font-semibold bg-orange-500 rounded hover:bg-orange-700"
@@ -288,7 +276,7 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
                                         backgroundPosition: "center",
                                         backgroundRepeat: "no-repeat",
                                         borderRadius: isHead ? '30%' : isSnakeBody ? '40%' : 'none',
-                                        transform: isHead ? getSnakeHeadRotation() : 'none'   
+                                        transform: isHead ? getSnakeHeadRotation() : 'none',
                                     }}
                                 ></div>
                             );
