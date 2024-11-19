@@ -33,6 +33,7 @@ export default function Home() {
       {gameStarted ? (
         <main>
           <SnakeGrid
+          difficulty={difficulty}
           onMainMenu={handleMainMenuClick}
             speed={speed} />
         </main>

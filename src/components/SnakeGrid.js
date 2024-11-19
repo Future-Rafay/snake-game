@@ -7,6 +7,7 @@ const eatSound = new Audio('/sounds/eatingApple.mp3');
 const gameStartSound = new Audio('/sounds/gameStartSound.mp3')
 const gameOverSound = new Audio('/sounds/game-over3.mp3');
 const collisionSound = new Audio('/sounds/collisionSound.mp3')
+const speedIncrease = new Audio('/sounds/speedIncrease.mp3')
 
 const foodImages = [
     '/images/Apple.png',
@@ -48,8 +49,10 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
     useEffect(() => {
         if (score > 0 && score % 5 === 0) { // Adjust speed every 10 points
             setIncreaseSpeed((prevSpeed) => Math.max(prevSpeed - 10, 50));
-            setSpeedIncreased(true);
-            setTimeout(() => setSpeedIncreased(false), 1500);
+            speedIncrease.play(),
+                setSpeedIncreased(true);
+            setTimeout(() => setSpeedIncreased(false), 1500
+            );
 
         }
     }, [score]);
@@ -146,6 +149,10 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
 
             setScore(score + 1);
             eatSound.play();
+            setTimeout(() => {
+                eatSound.pause();
+                eatSound.currentTime = 0;
+            }, 700);
             generateFood();
         } else {
             // Remove the tail segment if no food is eaten
