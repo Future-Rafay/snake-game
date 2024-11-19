@@ -42,14 +42,16 @@ const SnakeGrid = () => {
     const [speed, setSpeed] = useState(200);
     const [score, setScore] = useState(0);
     const [highestScore, setHighestScore] = useState(0);
+    const [directionChangeAllowed, setDirectionChangeAllowed] = useState(true);
     const [paused, setPaused] = useState(false); // Paused state
     const intervalRef = useRef(null); // Store the interval ID
     const gameGridRef = useRef(null); // Reference for the grid div
 
 
     useEffect(() => {
-        if (score > 0 && score % 5 === 0) { // Adjust speed every 20 points
+        if (score > 0 && score % 3 === 0) { // Adjust speed every 20 points
             setSpeed((prevSpeed) => Math.max(prevSpeed - 20, 50));
+            
         }
     }, [score]);
 
@@ -96,10 +98,10 @@ const SnakeGrid = () => {
     }, [])
 
     const moveSnake = () => {
-
         if (gameOver || paused) {
-            return; // Don't move if the game is over or paused
+            return;
         }
+
         const newSnake = [...snake];
         const snakeHead = { ...newSnake[0] };
 
@@ -116,6 +118,7 @@ const SnakeGrid = () => {
             snakeHead.x += 1;
         }
 
+        // Check for collisions with walls or itself
         if (
             snakeHead.x < 0 ||
             snakeHead.x > grid_Size - 1 ||
@@ -137,19 +140,22 @@ const SnakeGrid = () => {
             }
             return;
         }
-
+        // Add the new head to the snake
         newSnake.unshift(snakeHead);
 
+        // Check if the snake eats the food
         if (snakeHead.x === food.x && snakeHead.y === food.y) {
 
             setScore(score + 1);
             eatSound.play();
             generateFood();
         } else {
+            // Remove the tail segment if no food is eaten
             newSnake.pop();
         }
 
         setSnake(newSnake)
+        setDirectionChangeAllowed(true);
     }
 
     useEffect(() => {
@@ -161,21 +167,28 @@ const SnakeGrid = () => {
     }, [speed, snake, direction, gameOver, paused]);
 
     const handleKeyPress = (event) => {
-        if (paused) {
+        if (paused || !directionChangeAllowed) {
             return;
         }
 
+        let newDirection = direction; // Keep the current direction as default
+
         if ((event.key === "ArrowUp" || event.key === "w") && direction !== "DOWN") {
-            setDirection("UP");
+            newDirection = "UP";
         }
         if ((event.key === "ArrowDown" || event.key === "s") && direction !== "UP") {
-            setDirection("DOWN");
+            newDirection = "DOWN";
         }
         if ((event.key === "ArrowLeft" || event.key === "a") && direction !== "RIGHT") {
-            setDirection("LEFT");
+            newDirection = "LEFT";
         }
         if ((event.key === "ArrowRight" || event.key === "d") && direction !== "LEFT") {
-            setDirection("RIGHT");
+            newDirection = "RIGHT";
+        }
+
+        if (newDirection !== direction) {
+            setDirection(newDirection);
+            setDirectionChangeAllowed(false);
         }
     }
 
