@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {useState } from "react";
 import SnakeGrid from "@/components/SnakeGrid";
 import StartMenu from "@/components/StartMenu"; 
 

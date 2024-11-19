@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 
 const grid_Size = 20;
-const snake_speed = 100;
 
 const eatSound = new Audio('/sounds/eatingApple.mp3');
 const gameStartSound = new Audio('/sounds/gameStartSound.mp3')
@@ -28,7 +27,7 @@ const getRandomFoodImage = () => {
 };
 
 
-const SnakeGrid = ({ gridRef }) => {
+const SnakeGrid = () => {
 
     const [snake, setSnake] = useState([
         { x: 3, y: 1 }, // Head
@@ -40,11 +39,20 @@ const SnakeGrid = ({ gridRef }) => {
     const [foodImage, setFoodImage] = useState(getRandomFoodImage());
     const [direction, setDirection] = useState("RIGHT")
     const [gameOver, setGameOver] = useState(false)
+    const [speed, setSpeed] = useState(200);
     const [score, setScore] = useState(0);
     const [highestScore, setHighestScore] = useState(0);
     const [paused, setPaused] = useState(false); // Paused state
     const intervalRef = useRef(null); // Store the interval ID
     const gameGridRef = useRef(null); // Reference for the grid div
+
+
+    useEffect(() => {
+        if (score > 0 && score % 5 === 0) { // Adjust speed every 20 points
+            setSpeed((prevSpeed) => Math.max(prevSpeed - 20, 50));
+        }
+    }, [score]);
+
 
     const generateFood = () => {
         const x = Math.floor(Math.random() * grid_Size);
@@ -64,10 +72,11 @@ const SnakeGrid = ({ gridRef }) => {
         gameStartSound.play();
         setDirection("RIGHT");
         setGameOver(false);
+        setSpeed(200)
         setScore(0);
         generateFood();
         focusGameGrid(); // Ensure the grid gets focused
-        setPaused(false); 
+        setPaused(false);
     };
 
     const focusGameGrid = () => {
@@ -133,7 +142,7 @@ const SnakeGrid = ({ gridRef }) => {
 
         if (snakeHead.x === food.x && snakeHead.y === food.y) {
 
-            setScore(score + 10); 
+            setScore(score + 1);
             eatSound.play();
             generateFood();
         } else {
@@ -143,13 +152,13 @@ const SnakeGrid = ({ gridRef }) => {
         setSnake(newSnake)
     }
 
-    useEffect(() => {       
+    useEffect(() => {
         if (!gameOver && !paused) {
-           
-            intervalRef.current = setInterval(moveSnake, snake_speed);
+
+            intervalRef.current = setInterval(moveSnake, speed);
         }
         return () => clearInterval(intervalRef.current);
-    }, [snake, direction, gameOver, paused]);
+    }, [speed, snake, direction, gameOver, paused]);
 
     const handleKeyPress = (event) => {
         if (paused) {
@@ -208,7 +217,7 @@ const SnakeGrid = ({ gridRef }) => {
                 </div>
             )}
 
-             <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
+            <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
                 <p className="text-xl font-bold">Score: {score}</p>
                 <p className="text-xl font-bold">Highest Score: {highestScore}</p>
             </div>
