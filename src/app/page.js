@@ -22,22 +22,24 @@ export default function Home() {
     } else if (selectedDifficulty === "hard") {
       setSpeed(100);
     }
-
   };
+
+  const handleMainMenuClick = () =>{
+    setGameStarted(false);
+  }
+
   return (
-    <main className="flex flex-col min-h-screen p-4 justify-center items-center">
+    <>
       {gameStarted ? (
-        <>
-          <div className="flex items-center justify-between w-full max-w-md mb-4">
-            <p className="text-lg font-bold">Difficulty: {difficulty}</p>
-          </div>
-          <SnakeGrid 
+        <main>
+          <SnakeGrid
+          onMainMenu={handleMainMenuClick}
             speed={speed} />
-        </>
+        </main>
       ) : (
         <StartMenu onStartGame={handleStartGame} />
       )}
-    </main>
+    </>
   );
 }
 

@@ -8,6 +8,7 @@ const eatSound = new Audio('/sounds/eatingApple.mp3');
 const gameStartSound = new Audio('/sounds/gameStartSound.mp3')
 const gameOverSound = new Audio('/sounds/game-over3.mp3');
 const collisionSound = new Audio('/sounds/collisionSound.mp3')
+const victorySound = new Audio('/sounds/victory.mp3');
 
 const foodImages = [
     '/images/Apple.png',
@@ -25,7 +26,7 @@ const getRandomFoodImage = () => {
     return foodImages[randomIndex];
 };
 
-const SnakeGrid = ({ speed }) => {
+const SnakeGrid = ({ speed, onMainMenu }) => {
 
     const [snake, setSnake] = useState([
         { x: 3, y: 1 }, // Head
@@ -38,6 +39,7 @@ const SnakeGrid = ({ speed }) => {
     const [direction, setDirection] = useState("RIGHT")
     const [gameOver, setGameOver] = useState(false)
     const [IncreaseSpeed, setIncreaseSpeed] = useState(speed);
+    const [speedIncreased, setSpeedIncreased] = useState(false);
     const [score, setScore] = useState(0);
     const [highestScore, setHighestScore] = useState(0);
     const [directionChangeAllowed, setDirectionChangeAllowed] = useState(true);
@@ -45,10 +47,20 @@ const SnakeGrid = ({ speed }) => {
     const intervalRef = useRef(null); // Store the interval ID
     const gameGridRef = useRef(null); // Reference for the grid div
 
+    useEffect(() => {
+        if (gameOver) {
+            if (score > highestScore) {
+                // Victory Sound & Animation
+                victorySound.play();
+            }
+        }
+    }, [gameOver, score, highestScore]);
 
     useEffect(() => {
-        if (score > 0 && score % 4 === 0) { // Adjust speed every 10 points
+        if (score > 0 && score % 1 === 0) { // Adjust speed every 10 points
             setIncreaseSpeed((prevSpeed) => Math.max(prevSpeed - 10, 50));
+            setSpeedIncreased(true);
+            setTimeout(() => setSpeedIncreased(false), 1500);
 
         }
     }, [score]);
@@ -162,7 +174,7 @@ const SnakeGrid = ({ speed }) => {
             intervalRef.current = setInterval(moveSnake, IncreaseSpeed);
         }
         return () => clearInterval(intervalRef.current);
-    }, [ snake, direction, gameOver, paused]);
+    }, [snake, direction, gameOver, paused]);
 
     const handleKeyPress = (event) => {
         if (paused || !directionChangeAllowed) {
@@ -208,64 +220,82 @@ const SnakeGrid = ({ speed }) => {
     const togglePause = () => {
         setPaused(prev => !prev); // Toggle pause state
     };
-    
+
     return (
-        <div
-            ref={gameGridRef}
-            onKeyDown={handleKeyPress}
-            tabIndex={0}
-            autoFocus
-            className="grid grid-cols-20 grid-rows-20 border-2 border-solid border-black"
-        >
-            {gameOver && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
-                    <h1 className="text-6xl font-bold mb-4">GAME OVER!</h1>
-                    <button
-                        className="px-8 py-4 text-2xl font-semibold bg-green-500 rounded hover:bg-green-700"
-                        onClick={resetGame}
-                    >
-                        Play Again
-                    </button>
+        <div className="flex flex-col min-h-screen p-4 justify-center items-center">
+            {speedIncreased && (
+                <div className="absolute inset-0 flex items-center justify-center z-50">
+                    <h1 className="text-4xl font-bold text-yellow-400 animate-scale-up">
+                        Speed Increase!
+                    </h1>
                 </div>
             )}
-
-            <div className="absolute top-4 left-4 bg-white p-4 rounded shadow">
-                <p className="text-xl font-bold">Score: {score}</p>
-                <p className="text-xl font-bold">Highest Score: {highestScore}</p>
-            </div>
-            <button
-                className="absolute top-4 right-4 px-6 py-2 bg-yellow-500 text-xl font-semibold rounded hover:bg-yellow-600"
-                onClick={togglePause}
+            <div
+                ref={gameGridRef}
+                onKeyDown={handleKeyPress}
+                tabIndex={0}
+                autoFocus
+                className="grid grid-cols-20 grid-rows-20 border-8 border-solid border-black bg-no-repeat bg-cover"
+                style={{
+                    backgroundImage: "url(/images/bg-game3.jpg)",
+                }}
             >
-                {paused ? "Resume" : "Pause"}
-            </button>
-
-            {Array.from({ length: grid_Size }).map((_, y) => (
-                <div key={y} className="flex">
-                    {Array.from({ length: grid_Size }).map((_, x) => {
-
-                        const isSnakeBody = snake.some((snakeBody) => snakeBody.x === x && snakeBody.y === y);
-                        const isHead = isSnakeBody && snake[0].x === x && snake[0].y === y;
-
-                        return (
-                            <div
-                                key={x}
-                                className={`w-10 h-10 ${isSnakeBody && !isHead ? "bg-[#8cc43f]" : ""
-                                    }`}
-                                style={{
-                                    backgroundImage: isHead ? "url('/images/snakeHead.png')" : isSnakeBody ? "url('/images/snakeBody.png')" : food.x === x && food.y === y ? `url('${foodImage}')` : 'none',
-                                    backgroundSize: "40px 40px",
-                                    backgroundPosition: "center",
-                                    backgroundRepeat: "no-repeat",
-                                    borderRadius: isHead ? '30%' : isSnakeBody ? '40%' : 'none',
-                                    transform: isHead ? getSnakeHeadRotation() : 'none'
-
-                                }}
-                            ></div>
-                        );
-                    })}
+                {gameOver && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
+                        <h1 className="text-6xl font-bold mb-4 animate-bounce">GAME OVER!</h1>
+                        <button
+                            className="px-8 py-4 text-2xl font-semibold bg-green-500 rounded hover:bg-green-700"
+                            onClick={resetGame}
+                        >
+                            Play Again  
+                        </button>
+                        <button
+                            className="mt-8 px-8 py-4 text-2xl font-semibold bg-orange-500 rounded hover:bg-orange-700"
+                            onClick={onMainMenu}
+                        >
+                            Main Menu
+                        </button>
+                    </div>
+                )}
+                <div className="absolute top-4 left-4 bg-slate-300 p-4 rounded shadow">
+                    <p className="text-xl font-bold text-gray-700">Score</p>
+                    <p className="text-2xl font-extrabold text-green-600">{score}</p>
+                    <p className="text-xl font-bold text-gray-700">Highest Score</p>
+                    <p className="text-2xl font-extrabold text-blue-600">{highestScore}</p>
                 </div>
-            ))}
+                <button
+                    className="absolute top-4 right-4 px-6 py-3 bg-yellow-500 text-xl font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
+                    onClick={togglePause}
+                >
+                    {paused ? "Resume" : "Pause"}
+                </button>
+
+                {Array.from({ length: grid_Size }).map((_, y) => (
+                    <div key={y} className="flex">
+                        {Array.from({ length: grid_Size }).map((_, x) => {
+
+                            const isSnakeBody = snake.some((snakeBody) => snakeBody.x === x && snakeBody.y === y);
+                            const isHead = isSnakeBody && snake[0].x === x && snake[0].y === y;
+
+                            return (
+                                <div
+                                    key={x}
+                                    className={`w-10 h-10 anim ${isSnakeBody && !isHead ? "bg-[#8cc43f]" : ""
+                                        }`}
+                                    style={{
+                                        backgroundImage: isHead ? "url('/images/snakeHead.png')" : isSnakeBody ? "url('/images/snakeBody.png')" : food.x === x && food.y === y ? `url('${foodImage}')` : 'none',
+                                        backgroundSize: "40px 40px",
+                                        backgroundPosition: "center",
+                                        backgroundRepeat: "no-repeat",
+                                        borderRadius: isHead ? '30%' : isSnakeBody ? '40%' : 'none',
+                                        transform: isHead ? getSnakeHeadRotation() : 'none'   
+                                    }}
+                                ></div>
+                            );
+                        })}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
