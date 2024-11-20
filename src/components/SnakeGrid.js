@@ -251,38 +251,43 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
         const width = window.innerWidth;
 
         // Update background size
-        if (width >= 320 && width <= 480) setBackgroundSize("16px");
-        else if (width >= 480 && width <= 640) setBackgroundSize("22px");
-        else if (width >= 640 && width <= 768) setBackgroundSize("25px");
-        else if (width >= 768 && width <= 1024) setBackgroundSize("24px");
-        else if (width >= 1024 && width <= 1280) setBackgroundSize("28px");
-        else if (width >= 1280 && width <= 1536) setBackgroundSize("32px");
-        else setBackgroundSize("40px");
+        if (width >= 320 && width < 430) setBackgroundSize("16px"); // 3xs
+        else if (width >= 430 && width < 480) setBackgroundSize("22px"); // 2xs
+        else if (width >= 480 && width < 640) setBackgroundSize("25px"); // xs
+        else if (width >= 640 && width < 768) setBackgroundSize("24px"); // sm
+        else if (width >= 768 && width < 1024) setBackgroundSize("28px"); // md
+        else if (width >= 1024 && width < 1280) setBackgroundSize("32px"); // lg
+        else if (width >= 1280 && width < 1536) setBackgroundSize("36px"); // xl
+        else setBackgroundSize("40px"); // 2xl and beyond
 
         // Update cell width and height
-        if (width >= 430 && width <= 480) {
-            setCellWidth("14px");
+        if (width >= 320 && width < 430) {
+            setCellWidth("14px"); // 3xs
             setCellHeight("14px");
-        } else if (width >= 480 && width <= 640) {
-            setCellWidth("22px");
+        } else if (width >= 430 && width < 480) {
+            setCellWidth("18px"); // 2xs
+            setCellHeight("18px");
+        } else if (width >= 480 && width < 640) {
+            setCellWidth("22px"); // xs
             setCellHeight("22px");
-        } else if (width >= 640 && width <= 768) {
-            setCellWidth("25px");
+        } else if (width >= 640 && width < 768) {
+            setCellWidth("25px"); // sm
             setCellHeight("25px");
-        } else if (width >= 768 && width <= 1024) {
-            setCellWidth("26px");
+        } else if (width >= 768 && width < 1024) {
+            setCellWidth("26px"); // md
             setCellHeight("26px");
-        } else if (width >= 1024 && width <= 1280) {
-            setCellWidth("28px");
+        } else if (width >= 1024 && width < 1280) {
+            setCellWidth("28px"); // lg
             setCellHeight("28px");
-        } else if (width >= 1280 && width <= 1536) {
-            setCellWidth("32px");
+        } else if (width >= 1280 && width < 1536) {
+            setCellWidth("32px"); // xl
             setCellHeight("32px");
         } else {
-            setCellWidth("40px");
+            setCellWidth("40px"); // 2xl
             setCellHeight("40px");
         }
     };
+    
 
     useEffect(() => {
         updateDimensions();
@@ -364,32 +369,18 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                         <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-gray-700">Highest Score in <span className="text-2xl font-bold text-orange-600">{difficulty}</span> difficulty</p>
                         <p className="text-2xl font-extrabold text-blue-600">{highestScore}</p>
                     </div> */}
-                    <div className="absolute top-4 left-4 bg-green-100 p-4 rounded-lg shadow-lg border border-green-300">
-                        {/* Score Label */}
-                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-sm font-semibold text-green-700">
-                            Current Score
-                        </p>
-                        <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-green-800">{score}</p>
-
-                        {/* Highest Score Label */}
-                        <p className="mt-2 xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-sm font-semibold text-green-700">
-                            Highest Score in{" "}
-                            <span className="text-base sm:text-lg md:text-xl font-bold text-orange-600">{difficulty}</span> difficulty
-                        </p>
-                        <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-600">{highestScore}</p>
-                    </div>
                     <button
                         className="absolute top-4 right-44 px-6 py-3 bg-yellow-500 text-xl font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
                         onClick={togglePause}
                     >
                         {paused ? "Resume" : "Pause"}
                     </button>
-                    <button
+                    {/* <button
                         className="absolute top-4 right-4 px-6 py-3 bg-red-500 text-xl font-semibold text-white rounded shadow hover:bg-red-600 transition"
                         onClick={onMainMenu}
                     >
                         Main Menu
-                    </button>
+                    </button> */}
 
                     {Array.from({ length: grid_Size }).map((_, y) => (
                         <div key={y} className="flex">
