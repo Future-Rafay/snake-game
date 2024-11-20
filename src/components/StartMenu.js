@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const StartMenu = ({ onStartGame }) => {
     const [difficulty, setDifficulty] = useState("easy");
+    // localStorage.clear();   
 
     const handleStartClick = () => {
         onStartGame(difficulty);

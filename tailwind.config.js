@@ -12,7 +12,8 @@ module.exports = {
         foreground: "var(--foreground)",
       },
       screens: {
-        'xxs': '320px',
+        '3xs' : '320px',
+        'xxs': '430px',
         'xs': '480px',   // Custom 'xs' breakpoint
         'sm': '640px',   // Default 'sm' breakpoint
         'md': '768px',   // Default 'md' breakpoint

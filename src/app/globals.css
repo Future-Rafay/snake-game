@@ -20,3 +20,59 @@
 .animate-scale-up {
     animation: scaleUp 1.6s ease-in-out;
 }
+
+@keyframes fly-in {
+    0% {
+        transform: translateY(-50px);
+        opacity: 0;
+    }   
+    50%{
+        transform: translateY(0);
+        opacity: 0.5;
+
+    }
+    100% {
+        transform: translateY(-50px);
+        opacity: 1;
+    }
+}
+
+.custom-fly-in {
+    animation: fly-in 1s ease-out infinite;
+}
+
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    50%{
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.custom-fade-in {
+    animation: fade-in 1.5s ease-in infinite;
+}
+
+.landscape {
+    transform: rotate(90deg); /* Rotate the grid */
+    transform-origin: center center; /* Ensure it rotates around the center */
+    width: 100vh; /* Fit the viewport height in landscape */
+    height: 100vw; /* Fit the viewport width in landscape */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .portrait {
+    transform: rotate(0deg); /* No rotation for portrait */
+    width: 100%; /* Use full width */
+    height: 100%; /* Use full height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
