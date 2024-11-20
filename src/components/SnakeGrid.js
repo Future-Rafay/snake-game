@@ -3,11 +3,16 @@ import { useEffect, useRef, useState } from "react";
 
 const grid_Size = 20;
 
-const eatSound = new Audio('/sounds/eatingApple.mp3');
-const gameStartSound = new Audio('/sounds/gameStartSound.mp3')
-const gameOverSound = new Audio('/sounds/game-over3.mp3');
-const collisionSound = new Audio('/sounds/collisionSound.mp3')
-const speedIncrease = new Audio('/sounds/speedIncrease.mp3')
+let gameStartSound, gameOverSound, collisionSound, speedIncrease, eatSound;
+
+if (typeof window !== 'undefined') {
+
+    eatSound = new Audio('/sounds/eatingApple.mp3')
+    gameStartSound = new Audio('/sounds/gameStartSound.mp3');
+    gameOverSound = new Audio('/sounds/game-over3.mp3');
+    collisionSound = new Audio('/sounds/collisionSound.mp3');
+    speedIncrease = new Audio('/sounds/speedIncrease.mp3');
+}
 
 const foodImages = [
     '/images/Apple.png',
@@ -25,7 +30,7 @@ const getRandomFoodImage = () => {
     return foodImages[randomIndex];
 };
 
-const SnakeGrid = ({ speed, onMainMenu }) => {
+const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
 
     const [snake, setSnake] = useState([
         { x: 3, y: 1 }, // Head
@@ -42,9 +47,9 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
     const [score, setScore] = useState(0);
     const [highestScore, setHighestScore] = useState(0);
     const [directionChangeAllowed, setDirectionChangeAllowed] = useState(true);
-    const [paused, setPaused] = useState(false); // Paused state
+    const [paused, setPaused] = useState(false); 
     const intervalRef = useRef(null); // Store the interval ID
-    const gameGridRef = useRef(null); // Reference for the grid div
+    const gameGridRef = useRef(null); 
 
     useEffect(() => {
         if (score > 0 && score % 5 === 0) { // Adjust speed every 10 points
@@ -89,14 +94,15 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
     };
 
     useEffect(() => {
-        const storedHighestScore = localStorage.getItem("highestScore");
+        // Fetch the highest score for the current difficulty from localStorage
+        const storedHighestScore = localStorage.getItem(`highestScore_${difficulty}`);
         if (storedHighestScore) {
             setHighestScore(parseInt(storedHighestScore, 10));
         }
         gameStartSound.play();
         generateFood();
         focusGameGrid();
-    }, [])
+    }, [difficulty]);
 
     const moveSnake = () => {
         if (gameOver || paused) {
@@ -134,12 +140,6 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
                 gameOverSound.play();
             };
             clearInterval(intervalRef.current);
-
-            if (score > highestScore) {
-                setHighestScore(score);
-                localStorage.setItem("highestScore", score);
-            }
-            return;
         }
         // Add the new head to the snake
         newSnake.unshift(snakeHead);
@@ -155,13 +155,20 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
             }, 700);
             generateFood();
         } else {
-            // Remove the tail segment if no food is eaten
             newSnake.pop();
         }
 
         setSnake(newSnake)
         setDirectionChangeAllowed(true);
     }
+
+    useEffect(() => {
+        // Update the highest score when the score exceeds the current highest score
+        if (score > highestScore) {
+            setHighestScore(score);
+            localStorage.setItem(`highestScore_${difficulty}`, score);
+        }
+    }, [score, highestScore, difficulty]);
 
     useEffect(() => {
         if (!gameOver && !paused) {
@@ -239,13 +246,13 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
                         <h1 className="text-6xl font-bold mb-4 animate-bounce">GAME OVER!</h1>
                         <button
-                            className="px-8 py-4 text-2xl font-semibold bg-green-500 rounded hover:bg-green-700"
+                            className="px-8 py-4 text-2xl font-semibold bg-green-500 rounded hover:bg-green-700 z-30"
                             onClick={resetGame}
                         >
                             Play Again
                         </button>
                         <button
-                            className="mt-8 px-8 py-4 text-2xl font-semibold bg-orange-500 rounded hover:bg-orange-700"
+                            className="mt-8 px-8 py-4 text-2xl font-semibold bg-orange-500 rounded hover:bg-orange-700 z-30"
                             onClick={onMainMenu}
                         >
                             Main Menu
@@ -255,7 +262,7 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
                 <div className="absolute top-4 left-4 bg-slate-300 p-4 rounded shadow">
                     <p className="text-xl font-bold text-gray-700">Score</p>
                     <p className="text-2xl font-extrabold text-green-600">{score}</p>
-                    <p className="text-xl font-bold text-gray-700">Highest Score</p>
+                    <p className="text-xl font-bold text-gray-700">Highest Score in <span className="text-2xl font-bold text-orange-600">{difficulty}</span> difficulty</p>
                     <p className="text-2xl font-extrabold text-blue-600">{highestScore}</p>
                 </div>
                 <button
@@ -275,7 +282,7 @@ const SnakeGrid = ({ speed, onMainMenu }) => {
                             return (
                                 <div
                                     key={x}
-                                    className={`w-10 h-10 anim ${isSnakeBody && !isHead ? "bg-[#8cc43f]" : ""
+                                    className={`w-10 h-10 ${isSnakeBody && !isHead ? "bg-[#8cc43f]" : ""
                                         }`}
                                     style={{
                                         backgroundImage: isHead ? "url('/images/snakeHead.png')" : isSnakeBody ? "url('/images/snakeBody.png')" : food.x === x && food.y === y ? `url('${foodImage}')` : 'none',
