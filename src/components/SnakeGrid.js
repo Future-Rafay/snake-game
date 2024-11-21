@@ -365,7 +365,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                             )}
 
 
-                            <h1 className="text-xl 3xs:text-2xl 2xs:text-4xl xs:text-5xl sm:text-6xl lg:text-7xl  font-bold mb-6 custom-fade-in">GAME OVER!</h1>
+                            <h1 className="text-xl 3xs:text-2xl 2xs:text-4xl xs:text-5xl sm:text-6xl lg:text-7xl z-10 font-bold mb-6 custom-fade-in">GAME OVER!</h1>
                             <button
                                 className="px-4 py-2 3xs:px-4 3xs:py-2 3xs:text-xs 2xs:px-5 xs:text-base sm:px-6 sm:text-lg lg:px-8 lg:py-4 lg:text-xl  text-xs font-semibold bg-green-500 rounded hover:bg-green-700 z-30"
                                 onClick={resetGame}
