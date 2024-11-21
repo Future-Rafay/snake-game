@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSwipeable } from 'react-swipeable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPause } from '@fortawesome/free-solid-svg-icons';
@@ -80,12 +80,12 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
         }
     }, [score]);
 
-    const generateFood = () => {
+    const generateFood = useCallback(() => {
         const x = Math.floor(Math.random() * grid_Size);
         const y = Math.floor(Math.random() * grid_Size);
-        setFood({ x, y })
+        setFood({ x, y });
         setFoodImage(getRandomFoodImage());
-    }
+    }, []);
 
     const resetGame = () => {
         clearInterval(intervalRef.current); // Clear any active interval
@@ -121,9 +121,10 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
         gameStartSound.play();
         generateFood();
         focusGameGrid();
-    }, [difficulty]);
+    }, [generateFood, difficulty]);
 
-    const moveSnake = () => {
+
+    const moveSnake = useCallback(() => {
         if (gameOver || paused) {
             return;
         }
@@ -150,8 +151,9 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
             snakeHead.x > grid_Size - 1 ||
             snakeHead.y < 0 ||
             snakeHead.y > grid_Size - 1 ||
-
-            newSnake.some((snakeBody) => snakeBody.x === snakeHead.x && snakeBody.y === snakeHead.y)
+            newSnake.some(
+                (snakeBody) => snakeBody.x === snakeHead.x && snakeBody.y === snakeHead.y
+            )
         ) {
             setGameOver(true);
             clearInterval(intervalRef.current);
@@ -169,7 +171,6 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
 
         // Check if the snake eats the food
         if (snakeHead.x === food.x && snakeHead.y === food.y) {
-
             setScore(score + 1);
             eatSound.play();
             setTimeout(() => {
@@ -181,9 +182,20 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
             newSnake.pop();
         }
 
-        setSnake(newSnake)
+        setSnake(newSnake);
         setDirectionChangeAllowed(true);
-    }
+    }, [
+        gameOver,
+        paused,
+        snake,
+        direction,
+        food,
+        score,
+        showCongratulation,
+        generateFood,
+        setScore,
+        setDirectionChangeAllowed,
+    ]);
 
     useEffect(() => {
         // Update the highest score when the score exceeds the current highest score
@@ -326,12 +338,6 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
                             {showCongratulation && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center z-50 bg-opacity-80 bg-gradient-to-br from-purple-700 to-pink-500 text-white">
-                                    {/* <h1 className="text-sm  font-extrabold mb-4 glow-text custom-fly-in">
-                                        🎉 New High Score! 🎉
-                                    </h1>
-                                    <p className="text-sm font-semibold custom-fade-in">
-                                        Score: {score}
-                                    </p> */}
                                     <h1
                                         className="text-sm 3xs:text-2xl 2xs:text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-2 lg:mb-4 glow-text custom-fly-in"
                                     >

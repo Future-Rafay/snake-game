@@ -56,25 +56,6 @@
   animation: fade-in 1.5s ease-in infinite;
 }
 
-.landscape {
-  transform: rotate(90deg); /* Rotate the grid */
-  transform-origin: center center; /* Ensure it rotates around the center */
-  width: 100vh; /* Fit the viewport height in landscape */
-  height: 100vw; /* Fit the viewport width in landscape */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.portrait {
-  transform: rotate(0deg); /* No rotation for portrait */
-  width: 100%; /* Use full width */
-  height: 100%; /* Use full height */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 #container {
   background-image: url("/images/bg-container2.png");
   background-size: cover;
