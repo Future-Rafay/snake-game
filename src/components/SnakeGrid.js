@@ -41,13 +41,28 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
     //////////////////////////////////////////////////////////////////
 
     const handlers = useSwipeable({
-        onSwipedUp: () => setDirection("UP"),
-        onSwipedDown: () => setDirection("DOWN"),
-        onSwipedLeft: () => setDirection("LEFT"),
-        onSwipedRight: () => setDirection("RIGHT"),
+        onSwipedUp: () => setDirection('UP'),
+        onSwipedDown: () => setDirection('DOWN'),
+        onSwipedLeft: () => setDirection('LEFT'),
+        onSwipedRight: () => setDirection('RIGHT'),
         preventDefaultTouchmoveEvent: true,
         trackTouch: true,
-    });
+      });
+      useEffect(() => {
+        // Disable scrolling on mobile
+        const handleTouchMove = (e) => {
+          e.preventDefault();
+        };
+      
+        // Add event listener to prevent scrolling
+        document.body.addEventListener('touchmove', handleTouchMove, { passive: false });
+      
+        return () => {
+          // Clean up the event listener
+          document.body.removeEventListener('touchmove', handleTouchMove);
+        };
+      }, []);
+      
     //////////////////////////////////////////////////////////////////
     const [snake, setSnake] = useState([
         { x: 3, y: 1 }, // Head
@@ -316,7 +331,14 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
 
     return (
         <div>
-            <div className="flex flex-col min-h-screen justify-center items-center" id="container">
+            <div className="flex flex-col min-h-screen justify-center items-center" id="container"
+            {...handlers}  
+            style={{
+                width: '100vw',
+                height: '100vh',
+                position: 'relative',
+                overflow: 'hidden', // Make sure the container doesn't allow scrolling
+              }}>
 
                 {speedIncreased && (
                     <div className="absolute inset-0 flex items-center justify-center z-50">
@@ -327,7 +349,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                 )}
 
                 <div
-                    {...handlers}
+                    // {...handlers}   
                     ref={gameGridRef}
                     onKeyDown={handleKeyPress}
                     tabIndex={0}
