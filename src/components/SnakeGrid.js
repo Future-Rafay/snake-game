@@ -4,7 +4,7 @@ import { useSwipeable } from 'react-swipeable';
 
 const grid_Size = 20;
 
-let gameStartSound, gameOverSound, collisionSound, speedIncrease, eatSound , highScoreSound;
+let gameStartSound, gameOverSound, collisionSound, speedIncrease, eatSound, highScoreSound;
 
 if (typeof window !== 'undefined') {
 
@@ -268,11 +268,11 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
             setCellWidth("18px"); // 2xs
             setCellHeight("18px");
         } else if (width >= 480 && width < 640) {
-            setCellWidth("22px"); // xs
-            setCellHeight("22px");
+            setCellWidth("20px"); // xs
+            setCellHeight("20px");
         } else if (width >= 640 && width < 768) {
-            setCellWidth("25px"); // sm
-            setCellHeight("25px");
+            setCellWidth("24px"); // sm
+            setCellHeight("24px");
         } else if (width >= 768 && width < 1024) {
             setCellWidth("26px"); // md
             setCellHeight("26px");
@@ -287,7 +287,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
             setCellHeight("40px");
         }
     };
-    
+
 
     useEffect(() => {
         updateDimensions();
@@ -301,7 +301,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
     return (
         <div>
             <div className="flex flex-col min-h-screen justify-center items-center" id="container">
-            
+
                 {speedIncreased && (
                     <div className="absolute inset-0 flex items-center justify-center z-50">
                         <h1 className="text-4xl font-bold text-yellow-400 animate-scale-up">
@@ -316,7 +316,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                     onKeyDown={handleKeyPress}
                     tabIndex={0}
                     autoFocus
-                    className="grid grid-cols-20 grid-rows-20 outline-none"  id="playground"
+                    className="grid grid-cols-20 grid-rows-20 outline-none" id="playground"
                 >
                     {gameOver && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
@@ -361,23 +361,23 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                             </button>
                         </div>
                     )}
-                    <div className="absolute top-4 left-4 bg-transparent p-4 rounded shadow">
+                    <div className="absolute top-4 sm:top-2 left-4 bg-transparent rounded">
                         <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97]">Score</p>
-                        <p className="text-2xl font-extrabold text-green-600">{score}</p>
-                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97]">Highest Score in <span className="text-2xl font-bold text-orange-600">{difficulty}</span> difficulty</p>
-                        <p className="text-2xl font-extrabold text-blue-600">{highestScore}</p>
-                    </div>
+                        <p className="text-xl font-extrabold text-green-600">{score}</p>
+                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97] md:absolute md:top-20 lg:relative">Highest Score in <span className="font-bold text-orange-600">{difficulty}</span> difficulty</p>
+                        <p className="text-xl font-extrabold text-blue-600 md:absolute md:top-48 lg:relative">{highestScore}</p>
+                    </div>  
                     <button
-                        className="absolute top-4 right-44 px-6 py-3 bg-yellow-500 text-xl font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
+                        className="absolute top-16 right-4 px-4 py-2 text-sm 3xs:px-5 2xs:px-5 2xs:py-2 2xs:text-base sm:px-6 sm:py-3 sm:right-20 sm:top-4  sm:text-lg bg-yellow-500 font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
                         onClick={togglePause}
                     >
-                        {paused ? "Resume" : "Pause"}
+                        {paused ? <i class="fa-solid fa-play"></i> : <i class="fa-solid fa-pause"></i>}
                     </button>
                     <button
-                        className="absolute top-4 right-4 px-6 py-3 bg-red-500 text-xl font-semibold text-white rounded shadow hover:bg-red-600 transition"
+                        className="absolute top-4 right-4 px-4 py-2 text-sm 2xs:px-4 2xs:py-2 2xs:text-base sm:px-5 sm:right-3 sm:py-3  sm:text-lg bg-red-500 font-semibold text-white rounded shadow hover:bg-red-600 transition"
                         onClick={onMainMenu}
                     >
-                        Main Menu
+                        <i class="fa-solid fa-house"></i>
                     </button>
 
                     {Array.from({ length: grid_Size }).map((_, y) => (
