@@ -1,6 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useSwipeable } from 'react-swipeable';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPause } from '@fortawesome/free-solid-svg-icons';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
 
 const grid_Size = 20;
 
@@ -361,23 +365,23 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                             </button>
                         </div>
                     )}
-                    <div className="absolute top-4 sm:top-2 left-4 bg-transparent rounded">
+                    <div className="absolute top-4 sm:top-2 2xl:p-4 xl:top-4 left-4 bg-transparent rounded">
                         <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97]">Score</p>
                         <p className="text-xl font-extrabold text-green-600">{score}</p>
-                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97] md:absolute md:top-20 lg:relative">Highest Score in <span className="font-bold text-orange-600">{difficulty}</span> difficulty</p>
-                        <p className="text-xl font-extrabold text-blue-600 md:absolute md:top-48 lg:relative">{highestScore}</p>
-                    </div>  
+                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97] md:absolute md:top-16 lg:top-16 xl:relative xl:top-0">Highest Score in <span className="font-bold text-orange-600">{difficulty}</span> difficulty</p>
+                        <p className="text-xl font-extrabold text-blue-600 md:absolute md:top-44 lg:top-44 xl:relative xl:top-0">{highestScore}</p>
+                    </div>
                     <button
                         className="absolute top-16 right-4 px-4 py-2 text-sm 3xs:px-5 2xs:px-5 2xs:py-2 2xs:text-base sm:px-6 sm:py-3 sm:right-20 sm:top-4  sm:text-lg bg-yellow-500 font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
                         onClick={togglePause}
                     >
-                        {paused ? <i class="fa-solid fa-play"></i> : <i class="fa-solid fa-pause"></i>}
+                        {paused ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faPlay} />}
                     </button>
                     <button
                         className="absolute top-4 right-4 px-4 py-2 text-sm 2xs:px-4 2xs:py-2 2xs:text-base sm:px-5 sm:right-3 sm:py-3  sm:text-lg bg-red-500 font-semibold text-white rounded shadow hover:bg-red-600 transition"
                         onClick={onMainMenu}
                     >
-                        <i class="fa-solid fa-house"></i>
+                        <FontAwesomeIcon icon={faHome} />
                     </button>
 
                     {Array.from({ length: grid_Size }).map((_, y) => (
