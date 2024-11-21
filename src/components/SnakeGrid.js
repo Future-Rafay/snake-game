@@ -251,8 +251,8 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
         const width = window.innerWidth;
 
         // Update background size
-        if (width >= 320 && width < 430) setBackgroundSize("16px"); // 3xs
-        else if (width >= 430 && width < 480) setBackgroundSize("22px"); // 2xs
+        if (width >= 320 && width < 430) setBackgroundSize("14px"); // 3xs
+        else if (width >= 430 && width < 480) setBackgroundSize("18px"); // 2xs
         else if (width >= 480 && width < 640) setBackgroundSize("25px"); // xs
         else if (width >= 640 && width < 768) setBackgroundSize("24px"); // sm
         else if (width >= 768 && width < 1024) setBackgroundSize("28px"); // md
@@ -300,7 +300,8 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
 
     return (
         <div>
-            <div className="flex flex-col min-h-screen justify-center items-center">
+            <div className="flex flex-col min-h-screen justify-center items-center" id="container">
+            
                 {speedIncreased && (
                     <div className="absolute inset-0 flex items-center justify-center z-50">
                         <h1 className="text-4xl font-bold text-yellow-400 animate-scale-up">
@@ -315,10 +316,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                     onKeyDown={handleKeyPress}
                     tabIndex={0}
                     autoFocus
-                    className="grid grid-cols-20 grid-rows-20 border-2 xs:border-4 2xl:border-6 border-solid border-black bg-no-repeat bg-cover"
-                    style={{
-                        backgroundImage: "url(/images/bg-game3.jpg)",
-                    }}
+                    className="grid grid-cols-20 grid-rows-20 outline-none"  id="playground"
                 >
                     {gameOver && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
@@ -363,24 +361,24 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                             </button>
                         </div>
                     )}
-                    {/* <div className="absolute top-4 left-4 bg-slate-300 p-4 rounded shadow">
-                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-gray-700">Score</p>
+                    <div className="absolute top-4 left-4 bg-transparent p-4 rounded shadow">
+                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97]">Score</p>
                         <p className="text-2xl font-extrabold text-green-600">{score}</p>
-                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-gray-700">Highest Score in <span className="text-2xl font-bold text-orange-600">{difficulty}</span> difficulty</p>
+                        <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97]">Highest Score in <span className="text-2xl font-bold text-orange-600">{difficulty}</span> difficulty</p>
                         <p className="text-2xl font-extrabold text-blue-600">{highestScore}</p>
-                    </div> */}
+                    </div>
                     <button
                         className="absolute top-4 right-44 px-6 py-3 bg-yellow-500 text-xl font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
                         onClick={togglePause}
                     >
                         {paused ? "Resume" : "Pause"}
                     </button>
-                    {/* <button
+                    <button
                         className="absolute top-4 right-4 px-6 py-3 bg-red-500 text-xl font-semibold text-white rounded shadow hover:bg-red-600 transition"
                         onClick={onMainMenu}
                     >
                         Main Menu
-                    </button> */}
+                    </button>
 
                     {Array.from({ length: grid_Size }).map((_, y) => (
                         <div key={y} className="flex">
