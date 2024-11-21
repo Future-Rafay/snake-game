@@ -41,28 +41,44 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
     //////////////////////////////////////////////////////////////////
 
     const handlers = useSwipeable({
-        onSwipedUp: () => setDirection('UP'),
-        onSwipedDown: () => setDirection('DOWN'),
-        onSwipedLeft: () => setDirection('LEFT'),
-        onSwipedRight: () => setDirection('RIGHT'),
+        onSwipedUp: () => {
+            if (direction !== 'DOWN') {  // Prevent turning 180° (down to up)
+                setDirection('UP');
+            }
+        },
+        onSwipedDown: () => {
+            if (direction !== 'UP') {  // Prevent turning 180° (up to down)
+                setDirection('DOWN');
+            }
+        },
+        onSwipedLeft: () => {
+            if (direction !== 'RIGHT') {  // Prevent turning 180° (right to left)
+                setDirection('LEFT');
+            }
+        },
+        onSwipedRight: () => {
+            if (direction !== 'LEFT') {  // Prevent turning 180° (left to right)
+                setDirection('RIGHT');
+            }
+        },
         preventDefaultTouchmoveEvent: true,
         trackTouch: true,
-      });
-      useEffect(() => {
+    });
+    useEffect(() => {
         // Disable scrolling on mobile
         const handleTouchMove = (e) => {
-          e.preventDefault();
+            e.preventDefault();
         };
-      
+
         // Add event listener to prevent scrolling
         document.body.addEventListener('touchmove', handleTouchMove, { passive: false });
-      
+
         return () => {
-          // Clean up the event listener
-          document.body.removeEventListener('touchmove', handleTouchMove);
+            // Clean up the event listener
+            document.body.removeEventListener('touchmove', handleTouchMove);
         };
-      }, []);
-      
+    }, []);
+
     //////////////////////////////////////////////////////////////////
     const [snake, setSnake] = useState([
         { x: 3, y: 1 }, // Head
@@ -332,13 +348,13 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
     return (
         <div>
             <div className="flex flex-col min-h-screen justify-center items-center" id="container"
-            {...handlers}  
-            style={{
-                width: '100vw',
-                height: '100vh',
-                position: 'relative',
-                overflow: 'hidden', // Make sure the container doesn't allow scrolling
-              }}>
+                {...handlers}
+                style={{
+                    width: '100vw',
+                    height: '100vh',
+                    position: 'relative',
+                    overflow: 'hidden', // Make sure the container doesn't allow scrolling
+                }}>
 
                 {speedIncreased && (
                     <div className="absolute inset-0 flex items-center justify-center z-50">
