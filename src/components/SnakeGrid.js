@@ -257,11 +257,11 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
         // Update background size
         if (width >= 320 && width < 430) setBackgroundSize("14px"); // 3xs
         else if (width >= 430 && width < 480) setBackgroundSize("18px"); // 2xs
-        else if (width >= 480 && width < 640) setBackgroundSize("25px"); // xs
+        else if (width >= 480 && width < 640) setBackgroundSize("20px"); // xs
         else if (width >= 640 && width < 768) setBackgroundSize("24px"); // sm
-        else if (width >= 768 && width < 1024) setBackgroundSize("28px"); // md
-        else if (width >= 1024 && width < 1280) setBackgroundSize("32px"); // lg
-        else if (width >= 1280 && width < 1536) setBackgroundSize("36px"); // xl
+        else if (width >= 768 && width < 1024) setBackgroundSize("26px"); // md
+        else if (width >= 1024 && width < 1280) setBackgroundSize("28px"); // lg
+        else if (width >= 1280 && width < 1536) setBackgroundSize("32px"); // xl
         else setBackgroundSize("40px"); // 2xl and beyond
 
         // Update cell width and height
@@ -326,21 +326,31 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white">
                             {showCongratulation && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center z-50 bg-opacity-80 bg-gradient-to-br from-purple-700 to-pink-500 text-white">
-                                    <h1 className="text-6xl font-extrabold mb-4 glow-text custom-fly-in">
+                                    {/* <h1 className="text-sm  font-extrabold mb-4 glow-text custom-fly-in">
                                         🎉 New High Score! 🎉
                                     </h1>
-                                    <p className="text-3xl font-semibold custom-fade-in">
+                                    <p className="text-sm font-semibold custom-fade-in">
+                                        Score: {score}
+                                    </p> */}
+                                    <h1
+                                        className="text-sm 3xs:text-2xl 2xs:text-3xl xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-2 lg:mb-4 glow-text custom-fly-in"
+                                    >
+                                        🎉 New High Score! 🎉
+                                    </h1>
+                                    <p
+                                        className="3xs:mb-10 text-xs 3xs:text-lg 2xs:mb-8 xs:text-xl sm:text-xl lg:text-2xl font-semibold custom-fade-in"
+                                    >
                                         Score: {score}
                                     </p>
                                     <button
-                                        className="mt-8 px-8 py-4 text-2xl font-semibold bg-green-500 rounded hover:bg-green-700 z-30 animate-bounce"
+                                        className="px-4 py-1 3xs:px-4 3xs:py-2 3xs:text-xs 2xs:px-5 xs:text-base sm:px-6 sm:text-lg lg:px-8 lg:py-4 lg:text-xl  text-xs font-semibold bg-green-500 rounded hover:bg-green-700 z-30"
                                         onClick={resetGame}
                                     >
                                         Play Again
                                     </button>
 
                                     <button
-                                        className="mt-8 px-8 py-4 text-2xl font-semibold bg-orange-500 rounded hover:bg-orange-700 z-30 animate-bounce"
+                                        className="mt-2 px-4 py-1 3xs:mt-4 3xs:px-4 3xs:py-2 3xs:text-xs 2xs:px-5 2xs:mt-6 xs:text-base sm:px-6 sm:text-lg lg:px-8 lg:py-4 lg:text-xl lg:mt-8 text-xs font-semibold bg-orange-500 rounded hover:bg-orange-700 z-30"
                                         onClick={onMainMenu}
                                     >
                                         Main Menu
@@ -349,16 +359,16 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                             )}
 
 
-                            <h1 className="text-6xl font-bold mb-4 custom-fade-in">GAME OVER!</h1>
+                            <h1 className="text-xl 3xs:text-2xl 2xs:text-4xl xs:text-5xl sm:text-6xl lg:text-7xl  font-bold mb-6 custom-fade-in">GAME OVER!</h1>
                             <button
-                                className="px-8 py-4 text-2xl font-semibold bg-green-500 rounded hover:bg-green-700 z-30"
+                                className="px-4 py-2 3xs:px-4 3xs:py-2 3xs:text-xs 2xs:px-5 xs:text-base sm:px-6 sm:text-lg lg:px-8 lg:py-4 lg:text-xl  text-xs font-semibold bg-green-500 rounded hover:bg-green-700 z-30"
                                 onClick={resetGame}
                             >
                                 Play Again
                             </button>
 
                             <button
-                                className="mt-8 px-8 py-4 text-2xl font-semibold bg-orange-500 rounded hover:bg-orange-700 z-30"
+                                className="mt-2 px-4 py-2 3xs:mt-4 3xs:px-4 3xs:py-2 3xs:text-xs 2xs:px-5 2xs:mt-6 xs:text-base sm:px-6 sm:text-lg lg:px-8 lg:py-4 lg:text-xl lg:mt-8 text-xs font-semibold bg-orange-500 rounded hover:bg-orange-700 z-30"
                                 onClick={onMainMenu}
                             >
                                 Main Menu
@@ -375,7 +385,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                         className="absolute top-16 right-4 px-4 py-2 text-sm 3xs:px-5 2xs:px-5 2xs:py-2 2xs:text-base sm:px-6 sm:py-3 sm:right-20 sm:top-4  sm:text-lg bg-yellow-500 font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
                         onClick={togglePause}
                     >
-                        {paused ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faPlay} />}
+                        {paused ? <FontAwesomeIcon icon={faPlay} /> : <FontAwesomeIcon icon={faPause} />}
                     </button>
                     <button
                         className="absolute top-4 right-4 px-4 py-2 text-sm 2xs:px-4 2xs:py-2 2xs:text-base sm:px-5 sm:right-3 sm:py-3  sm:text-lg bg-red-500 font-semibold text-white rounded shadow hover:bg-red-600 transition"
