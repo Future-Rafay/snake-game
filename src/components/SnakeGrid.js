@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPause } from '@fortawesome/free-solid-svg-icons';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
+import Footer from "./Footer";
 
 const grid_Size = 20;
 
@@ -464,6 +465,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                         </div>
                     ))}
                 </div>
+                <Footer />
             </div>
         </div>
     );

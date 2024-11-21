@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Footer from './Footer';
 
 const StartMenu = ({ onStartGame }) => {
     const [difficulty, setDifficulty] = useState("easy");
@@ -32,6 +33,7 @@ const StartMenu = ({ onStartGame }) => {
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
             </select>
+            <Footer />
         </div>
     );
 };
