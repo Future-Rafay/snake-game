@@ -200,7 +200,7 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
             intervalRef.current = setInterval(moveSnake, IncreaseSpeed);
         }
         return () => clearInterval(intervalRef.current);
-    }, [snake, direction, gameOver, paused]);
+    }, [IncreaseSpeed, moveSnake, snake, direction, gameOver, paused]);
 
     const handleKeyPress = (event) => {
         if (paused || !directionChangeAllowed) {
@@ -377,9 +377,9 @@ const SnakeGrid = ({ speed, onMainMenu, difficulty }) => {
                     )}
                     <div className="absolute top-4 sm:top-2 2xl:p-4 xl:top-4 left-4 bg-transparent rounded">
                         <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97]">Score</p>
-                        <p className="text-xl font-extrabold text-green-600">{score}</p>
+                        <p className="text-xl xl:text-2xl font-extrabold text-green-600">{score}</p>
                         <p className="xxs:text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-xs font-bold text-[#a0ab97] md:absolute md:top-16 lg:top-16 xl:relative xl:top-0">Highest Score in <span className="font-bold text-orange-600">{difficulty}</span> difficulty</p>
-                        <p className="text-xl font-extrabold text-blue-600 md:absolute md:top-44 lg:top-44 xl:relative xl:top-0">{highestScore}</p>
+                        <p className="text-xl xl:text-2xl font-extrabold text-blue-600 md:absolute md:top-44 lg:top-44 xl:relative xl:top-0">{highestScore}</p>
                     </div>
                     <button
                         className="absolute top-16 right-4 px-4 py-2 text-sm 3xs:px-5 2xs:px-5 2xs:py-2 2xs:text-base sm:px-6 sm:py-3 sm:right-20 sm:top-4  sm:text-lg bg-yellow-500 font-semibold text-white rounded shadow hover:bg-yellow-600 transition"
